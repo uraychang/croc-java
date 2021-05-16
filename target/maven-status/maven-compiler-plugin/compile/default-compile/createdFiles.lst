@@ -1,0 +1,7 @@
+idv\ray\croc\config\Config.class
+idv\ray\croc\relay\RelayException.class
+idv\ray\croc\room\RoomException$NoSenderException.class
+idv\ray\croc\room\RoomException.class
+idv\ray\croc\client\Client.class
+idv\ray\croc\relay\RelayException$ServerException.class
+idv\ray\croc\room\RoomException$OverwriteException.class

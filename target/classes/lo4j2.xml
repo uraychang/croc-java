@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+		</Console>
+		<RollingFile name="LogToRollingFile"
+			fileName="log/croc-java.log"
+			filePattern="log/croc-java_%d{yyyy-MM-dd}.log">
+			<PatternLayout charset="UTF-8">
+				<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5p][%C-%M():%L]-%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="1 MB" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="debug" additivity="false">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="LogToRollingFile" />
+		</Root>
+	</Loggers>
+</Configuration>

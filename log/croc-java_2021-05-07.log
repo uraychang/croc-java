@@ -1,0 +1,18 @@
+[2021-05-07 15:43:00.686][ERROR][idv.ray.croc.config.Config$ExceptionHandler-uncaughtException():19]-test
+java.lang.RuntimeException: java.io.IOException: IOException happens!!!!!
+	at idv.ray.croc.config.Config$1.run(Config.java:31) ~[classes/:?]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_261]
+Caused by: java.io.IOException: IOException happens!!!!!
+	at idv.ray.croc.config.Config.test(Config.java:42) ~[classes/:?]
+	at idv.ray.croc.config.Config.access$0(Config.java:41) ~[classes/:?]
+	at idv.ray.croc.config.Config$1.run(Config.java:29) ~[classes/:?]
+	... 1 more
+[2021-05-07 15:43:16.112][ERROR][idv.ray.croc.config.Config$ExceptionHandler-uncaughtException():19]-test
+java.lang.RuntimeException: runtime exception!!
+	at idv.ray.croc.config.Config$1.run(Config.java:31) ~[classes/:?]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_261]
+Caused by: java.io.IOException: IOException happens!!!!!
+	at idv.ray.croc.config.Config.test(Config.java:42) ~[classes/:?]
+	at idv.ray.croc.config.Config.access$0(Config.java:41) ~[classes/:?]
+	at idv.ray.croc.config.Config$1.run(Config.java:29) ~[classes/:?]
+	... 1 more
