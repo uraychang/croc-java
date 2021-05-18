@@ -1,0 +1,9 @@
+[2021-05-14 15:11:40.083][ERROR][idv.ray.croc.config.Config$ExceptionHandler-uncaughtException():35]-uncaughtException: 
+java.io.IOException: io exception
+	at idv.ray.croc.config.Config.main(Config.java:27) ~[classes/:?]
+[2021-05-14 15:11:44.898][ERROR][idv.ray.croc.config.Config$ExceptionHandler-uncaughtException():35]-uncaughtException: 
+java.io.IOException: io exception
+	at idv.ray.croc.config.Config.main(Config.java:27) ~[classes/:?]
+[2021-05-14 15:11:57.008][ERROR][idv.ray.croc.config.Config$ExceptionHandler-uncaughtException():35]-uncaughtException: 
+java.io.IOException: io exception
+	at idv.ray.croc.config.Config.main(Config.java:27) ~[classes/:?]

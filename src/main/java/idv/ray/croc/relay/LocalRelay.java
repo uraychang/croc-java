@@ -34,6 +34,7 @@ public class LocalRelay {
 
 		try {
 			serverSocket = new ServerSocket(port);
+			logger.debug("listening port: " + port);
 		} catch (IOException e) {
 			RelayException.ServerInitException ex = new RelayException.ServerInitException(
 					"fail to initialize server socket", e);
@@ -49,6 +50,7 @@ public class LocalRelay {
 					try {
 						/* server socket start to accept client */
 						socket = serverSocket.accept();
+						logger.debug("client accepted");
 						/* create new thread for each client */
 						Thread clientHanlderThread = new Thread(new ClientHandler(socket, room));
 						clientHanlderThread.setUncaughtExceptionHandler(new ExceptionHandler());

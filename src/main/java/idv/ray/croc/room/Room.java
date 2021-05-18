@@ -19,8 +19,8 @@ public class Room {
 	byte[] fileBuffer;
 
 	public Room() {
-		fileBuffer = new byte[Options.FILE_BUFFER_SIZE];
-		fileTransferFinished = new AtomicBoolean(false);
+		this.fileBuffer = new byte[Options.FILE_BUFFER_SIZE];
+		this.fileTransferFinished = new AtomicBoolean(false);
 	}
 
 	// clear this room when the transfer has finished
@@ -30,7 +30,7 @@ public class Room {
 	}
 
 	public synchronized void setSender(ClientConnectionHandler sender) throws OverwriteException {
-		if (sender == null) {
+		if (this.senderConnection == null) {
 			this.senderConnection = sender;
 		} else {
 			throw new OverwriteException("sender already exists");
@@ -40,8 +40,8 @@ public class Room {
 	public synchronized void setReceiver(ClientConnectionHandler receiver)
 			throws OverwriteException, NoSenderException {
 
-		if (senderConnection != null) {
-			if (receiver == null) {
+		if (this.senderConnection != null) {
+			if (this.receiverConnection == null) {
 				this.receiverConnection = receiver;
 			} else {
 				throw new OverwriteException("receiver already exists");
@@ -65,15 +65,6 @@ public class Room {
 		return (receiverConnection != null);
 	}
 
-	public synchronized void transferFile() throws IOException {
-		try {
-			ConnectionHandler.transferFile(senderConnection.getSocket().getInputStream(), receiverConnection.getSocket().getOutputStream());
-			fileTransferFinished.set(true);
-		} catch (IOException e) {
-			throw new IOException("fail to transfer file in room", e);
-		}
-	}
-
 	public synchronized AtomicBoolean fileTransferFinished() {
 		return fileTransferFinished;
 	}
@@ -85,4 +76,13 @@ public class Room {
 	public ClientConnectionHandler getReceiverConnection() {
 		return receiverConnection;
 	}
+
+	public synchronized boolean getFileTransferFinished() {
+		return fileTransferFinished.get();
+	}
+
+	public synchronized void setFileTransferFinished(boolean fileTransferFinished) {
+		this.fileTransferFinished.set(fileTransferFinished);
+	}
+
 }

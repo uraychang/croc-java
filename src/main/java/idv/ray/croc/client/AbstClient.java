@@ -21,7 +21,7 @@ public abstract class AbstClient {
 		Sender, Receiver
 	}
 
-	protected Logger logger = LogManager.getLogger();
+	protected Logger logger;
 	// [0] is local connection, [1] is remote connection
 	private ServerConnectionHandler[] connectionHandlers;
 	protected ServerConnectionHandler relayConnection;
@@ -34,6 +34,8 @@ public abstract class AbstClient {
 		Thread.currentThread().setUncaughtExceptionHandler(new ExceptionHandler());
 		this.clientType = clientType;
 		this.options = options;
+		connectionHandlers = new ServerConnectionHandler[2];
+		logger = LogManager.getLogger(getClass());
 	}
 
 	/*
@@ -43,6 +45,7 @@ public abstract class AbstClient {
 	protected ServerConnectionHandler connectToServer(String addr) throws IOException, MessagePatternException {
 		ServerConnectionHandler relay = null;
 		try {
+			logger.debug("connect to server: " + addr);
 			Socket socket = new Socket(addr, options.getRelayPort());
 			relay = new ServerConnectionHandler(socket);
 
@@ -50,6 +53,7 @@ public abstract class AbstClient {
 			relay.send(this.clientType.toString());
 			String response = relay.read();
 			ConnectionHandler.checkMessagePattern(response, ConnectionHandler.Message.Ack.toString());
+			logger.debug("connecting to " + addr + " successes");
 			return relay;
 
 		} catch (IOException e) {
@@ -82,4 +86,8 @@ public abstract class AbstClient {
 		return relayConnection;
 	}
 
+	protected void close() throws IOException {
+		logger.debug("close relay connection");
+		relayConnection.close();
+	}
 }

@@ -30,17 +30,18 @@ public class Sender extends AbstClient {
 	}
 
 	public void start() throws IOException, RelayException, ClientException, CommunicationException {
+		logger.debug("sender starts");
 		try {
+			logger.debug("intializing local relay...");
 			initLocalRelay();
 			this.relayConnection = getRelayConnection("localhost", options.getRelayAddress());
+			logger.debug("wait for receiver...");
 			waitReceiver();
+			logger.debug("starting sending file...");
 			sendFile();
 		} catch (IOException | RelayException | ClientException | CommunicationException e) {
 			throw e;
-		} finally {
-			/* no matter what, the sender should be closed eventually */
-			close();
-		}
+		} 
 	}
 
 	/* initialize the local relay to start listening for clients */
@@ -63,19 +64,13 @@ public class Sender extends AbstClient {
 	// start transfering file
 	private void sendFile() throws FileTransferException, IOException, MessagePatternException {
 		/* send file name */
-		relayConnection.send(ConnectionHandler.Message.FileName.toString() + "@" + file.getName());
-		
-		/* send file */
-		relayConnection.transferFileToServer(new FileInputStream(file));
-		String message = relayConnection.read();
-		ConnectionHandler.checkMessagePattern(message, ConnectionHandler.Message.Finished.toString());
-	}
+		relayConnection.send(ConnectionHandler.Message.FileHeader.toString() + "@" + file.getName() + "@"
+				+ Long.toString(file.length()));
 
-	private void close() throws IOException {
-		logger.debug("close relay connection");
-		if (relayConnection != null) {
-			relayConnection.close();
-		}
+		/* send file */
+		FileInputStream fileIn = new FileInputStream(file);
+		relayConnection.transferFileToServer(fileIn);
+
 	}
 
 }

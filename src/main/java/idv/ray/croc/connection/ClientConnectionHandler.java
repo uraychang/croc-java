@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.logging.log4j.LogManager;
+
 public class ClientConnectionHandler extends ConnectionHandler {
 
 	private AtomicBoolean isSender = new AtomicBoolean(false);
