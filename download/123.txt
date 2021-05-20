@@ -1,0 +1,5 @@
+/usr/local/nachos/decstation-ultrix/bin/
+hello
+asdfgh
+
+成功啦~~

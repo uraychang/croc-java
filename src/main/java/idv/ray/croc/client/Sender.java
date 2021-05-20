@@ -41,7 +41,7 @@ public class Sender extends AbstClient {
 			sendFile();
 		} catch (IOException | RelayException | ClientException | CommunicationException e) {
 			throw e;
-		} 
+		}
 	}
 
 	/* initialize the local relay to start listening for clients */
@@ -64,9 +64,8 @@ public class Sender extends AbstClient {
 	// start transfering file
 	private void sendFile() throws FileTransferException, IOException, MessagePatternException {
 		/* send file name */
-		relayConnection.send(ConnectionHandler.Message.FileHeader.toString() + "@" + file.getName() + "@"
-				+ Long.toString(file.length()));
-
+		relayConnection.send(ConnectionHandler.Message.FileHeader.toString() + "@" + file.getName() + "@");
+		ConnectionHandler.checkMessagePattern(relayConnection.read(), ConnectionHandler.Message.Ack.toString());
 		/* send file */
 		FileInputStream fileIn = new FileInputStream(file);
 		relayConnection.transferFileToServer(fileIn);

@@ -1,5 +1,7 @@
 package idv.ray.croc.connection;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -28,7 +30,7 @@ public abstract class ConnectionHandler {
 	private static Logger staticLogger = LogManager.getLogger();
 	protected Logger logger;
 	protected Socket socket;
-	public BufferedReader reader;
+	protected BufferedReader reader;
 	protected BufferedWriter writer;
 
 	/* open input reader and output writer in the constructor */
@@ -40,16 +42,12 @@ public abstract class ConnectionHandler {
 		/* set input reader and output writer */
 		try {
 			this.reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-			logger.debug("socket reader opened");
-		} catch (IOException e) {
-			throw new IOException("fial to open input reader", e);
-		}
-		try {
 			this.writer = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
-			logger.debug("socket writer opened");
+			logger.debug("socket reader and writer opened");
 		} catch (IOException e) {
-			throw new IOException("fial to open output writer", e);
+			throw new IOException("fial to open input reader and output writer", e);
 		}
+
 	}
 
 	public synchronized void send(String message) throws IOException {
@@ -89,16 +87,18 @@ public abstract class ConnectionHandler {
 	}
 
 	public static void transferFile(InputStream in, OutputStream out) throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(in);
+		BufferedOutputStream bos = new BufferedOutputStream(out);
 		byte[] buffer = new byte[Options.FILE_BUFFER_SIZE];
 		int len = 0;
 		try {
-			while ((len = in.read(buffer)) >= 0) {
-				out.write(buffer, 0, len);
+			while ((len = bis.read(buffer)) >= 0) {
+				bos.write(buffer, 0, len);
 				staticLogger.debug("sending file...");
 				staticLogger.debug("data: " + new String(buffer, StandardCharsets.UTF_8));
 			}
-			in.close();
-			out.close();
+			bis.close();
+			bos.close();
 
 			staticLogger.debug("sending file loop ends");
 		} catch (IOException e) {
@@ -121,36 +121,6 @@ public abstract class ConnectionHandler {
 			return;
 		else
 			throw new CommunicationException.MessagePatternException("the message pttern must be \"" + pattern + "\"");
-	}
-
-	public static void transferFile_test(Socket socket, OutputStream out,ConnectionHandler c) throws IOException {
-		InputStream in = socket.getInputStream();
-		staticLogger.debug("socket info");
-		staticLogger.debug("connected: " + socket.isConnected());
-		staticLogger.debug("input shutdown: " + socket.isInputShutdown());
-		staticLogger.debug("closed: " + socket.isClosed());
-		staticLogger.debug("socket info");
-
-		BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		byte[] buffer = new byte[Options.FILE_BUFFER_SIZE];
-		int len = 0;
-		try {
-			while ((len = in.read(buffer)) >= 0) {
-				out.write(buffer, 0, len);
-				staticLogger.debug("sending file...");
-				staticLogger.debug("data: " + new String(buffer, StandardCharsets.UTF_8));
-			}
-			in.close();
-			out.close();
-			staticLogger.debug("sending file loop ends");
-			//////////////////////////////////////////////////////
-			staticLogger.debug("reader read: " + reader.readLine());
-			staticLogger.debug("c reader read: " + c.read());
-
-		} catch (IOException e) {
-			throw new IOException("fail to transfer file", e);
-		}
-
 	}
 
 }

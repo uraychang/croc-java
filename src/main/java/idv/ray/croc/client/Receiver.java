@@ -38,9 +38,8 @@ public class Receiver extends AbstClient {
 	private void receiveFile() throws IOException, MessagePatternException {
 		String msg = relayConnection.read();
 		ConnectionHandler.checkMessagePattern(msg.split("@")[0], ConnectionHandler.Message.FileHeader.toString());
+		relayConnection.send(ConnectionHandler.Message.Ack.toString());
 		String fileName = msg.split("@")[1];
-		String longString = msg.split("@")[2];
-		long fileLength = Long.parseLong(longString);
 		logger.debug("download file name:" + fileName);
 		File file = new File(options.getDownloadPath() + "/" + fileName);
 		if (!file.exists()) {
@@ -55,7 +54,6 @@ public class Receiver extends AbstClient {
 	}
 
 	private String getLocalRelayIp() {
-
 		return listenToBroadcast();
 	}
 

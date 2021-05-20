@@ -28,6 +28,8 @@ public abstract class AbstClient {
 	protected final ClientType clientType;
 	protected Options options;
 
+	protected boolean onLocal;
+
 	public abstract void start() throws IOException, ClientException, RelayException, CommunicationException;
 
 	public AbstClient(ClientType clientType, Options options) {
@@ -76,9 +78,11 @@ public abstract class AbstClient {
 		ServerConnectionHandler relayConnection;
 		if (connectionHandlers[0] != null) {
 			relayConnection = connectionHandlers[0];
+			onLocal = true;
 			logger.debug("sender connects to local relay");
 		} else if (connectionHandlers[1] != null) {
 			relayConnection = connectionHandlers[1];
+			onLocal = false;
 			logger.debug("sender connects to remote relay");
 		} else {
 			throw new NoRelayConnectedException("both local and remote relay not connected");
@@ -89,5 +93,17 @@ public abstract class AbstClient {
 	protected void close() throws IOException {
 		logger.debug("close relay connection");
 		relayConnection.close();
+	}
+
+	protected ServerConnectionHandler reopenRelayConnection() throws IOException {
+		try {
+			if (onLocal) {
+				return new ServerConnectionHandler(new Socket("localhost", options.getRelayPort()));
+			} else {
+				return new ServerConnectionHandler(new Socket(options.getRelayAddress(), options.getRelayPort()));
+			}
+		} catch (IOException e) {
+			throw new IOException("fail to reopen severConnectionHandler");
+		}
 	}
 }

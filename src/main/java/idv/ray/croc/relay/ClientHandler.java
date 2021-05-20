@@ -86,12 +86,14 @@ public class ClientHandler implements Runnable {
 		clientConnection.send(ConnectionHandler.Message.ReceiverIsReady.toString());
 		/* get the fileName from sender and pass to receiver */
 		String msg = clientConnection.read();
+		clientConnection.send(ConnectionHandler.Message.Ack.toString());
 		ConnectionHandler.checkMessagePattern(msg.split("@")[0], ConnectionHandler.Message.FileHeader.toString());
 		room.getReceiverConnection().send(msg);
-		long fileLength = Long.parseLong(msg.split("@")[2]);
 
 		/* start transferring file */
-		ConnectionHandler.transferFile(room.getSenderConnection().getSocket().getInputStream(),
+		ConnectionHandler.checkMessagePattern(room.getReceiverConnection().read(),
+				ConnectionHandler.Message.Ack.toString());
+		ConnectionHandler.transferFile(clientConnection.getSocket().getInputStream(),
 				room.getReceiverConnection().getSocket().getOutputStream());
 		room.setFileTransferFinished(true);
 
